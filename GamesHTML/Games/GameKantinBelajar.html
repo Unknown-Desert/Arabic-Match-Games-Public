@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" translate="no" class="notranslate">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="google" content="notranslate" />
+    <meta http-equiv="Content-Language" content="ar" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مَطْعَمٌ - Belajar Kosakata Kantin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Reem+Kufi:wght@400;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --chalkboard: #c67b5c;
+            --wood: #6b4c3b;
+            --wood-light: #8b6a50;
+            --paper: #fefae0;
+            --gold: #d4a373;
+            --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.35);
+            --radius-card: 14px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Reem Kufi', 'Amiri', 'Segoe UI', Tahoma, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            direction: rtl;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            background-color: var(--chalkboard);
+            background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            background-size: 400px 400px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(60, 30, 10, 0.5) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #steamCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: screen;
+        }
+
+        .lamp-spotlight {
+            position: fixed;
+            top: -130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 650px;
+            height: 450px;
+            background: radial-gradient(ellipse at 50% 18%, rgba(255, 200, 100, 0.28) 0%, rgba(255, 170, 70, 0.08) 45%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            animation: lampFlicker 5s ease-in-out infinite;
+        }
+        @keyframes lampFlicker {
+            0%, 100% { opacity: 0.9; }
+            48% { opacity: 1; }
+            50% { opacity: 0.75; }
+            52% { opacity: 0.95; }
+        }
+
+        .decor-icons {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            font-size: 3.5rem;
+            opacity: 0.25;
+            animation: decorFloat 8s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+        .decor-icons.top-right { top: 6%; right: 4%; }
+        .decor-icons.top-left { top: 8%; left: 4%; animation-delay: -3s; font-size: 3rem; }
+        .decor-icons.bottom-right { bottom: 5%; right: 5%; animation-delay: -5s; font-size: 2.8rem; }
+        .decor-icons.bottom-left { bottom: 7%; left: 5%; animation-delay: -2s; font-size: 3.2rem; }
+        @keyframes decorFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(3deg); }
+            50% { transform: translateY(-8px) rotate(-2deg); }
+            75% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .game-container::before,
+        .game-container::after {
+            content: '🍽️';
+            position: absolute;
+            top: -14px;
+            font-size: 1.8rem;
+            z-index: 10;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.4));
+            animation: pinBounce 3s ease-in-out infinite;
+        }
+        .game-container::before {
+            right: 20px;
+        }
+        .game-container::after {
+            left: 20px;
+            animation-delay: 0.5s;
+        }
+        @keyframes pinBounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-7px);
+            }
+            50% {
+                transform: translateY(0);
+            }
+            70% {
+                transform: translateY(-4px);
+            }
+        }
+        .game-container {
+            position: relative;
+            z-index: 2;
+            background: var(--paper);
+            border-radius: 20px;
+            padding: 28px 24px 22px;
+            max-width: 780px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 5px var(--gold), 0 0 0 9px var(--paper), 0 0 0 13px var(--gold), 0 0 0 17px rgba(0, 0, 0, 0.3);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(180, 140, 100, 0.04) 3px, rgba(180, 140, 100, 0.04) 6px), linear-gradient(180deg, #fff9e6, #fef0d0);
+            animation: containerSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            overflow: hidden;
+        }
+        @keyframes containerSlideIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.92); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1 {
+            font-family: 'Amiri', 'Reem Kufi', serif;
+            font-size: 2.4rem;
+            color: #2c1810;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .badge-mode {
+            display: inline-block;
+            background: #e9d8a6;
+            color: #5c3d2e;
+            font-size: 0.85rem;
+            padding: 6px 18px;
+            border-radius: 20px;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            border: 1px solid var(--gold);
+        }
+
+        .info-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #3e2a1e;
+            background: linear-gradient(180deg, #fefae0, #f5e6c8);
+            padding: 12px 18px;
+            border-radius: 10px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.1);
+            border: 2px solid var(--gold);
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e9d8a6;
+        }
+        .info-item span {
+            color: #5c3d2e;
+            font-weight: 800;
+            font-size: 1.1rem;
+            min-width: 22px;
+            text-align: center;
+        }
+
+        .message {
+            font-family: 'Caveat', 'Amiri', cursive;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #5c3d2e;
+            margin: 8px 0 4px;
+            min-height: 32px;
+            transition: all 0.4s;
+            line-height: 1.6;
+        }
+        .message.success { color: #2d5a20; }
+        .message.win { color: #1a4a10; font-size: 1.25rem; animation: msgCelebrate 0.7s ease-out; }
+        @keyframes msgCelebrate {
+            0% { transform: scale(0.2); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .btn {
+            background: linear-gradient(180deg, #8b6a50, #6b4c3b);
+            color: #fefae0;
+            border: 2px solid #3e2216;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.35);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover {
+            background: linear-gradient(180deg, #a57a5a, #7a5540);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 26px rgba(0,0,0,0.5);
+            border-color: #5c3d2e;
+        }
+        .btn:active { transform: translateY(1px); transition: 0.08s; }
+        .btn-back {
+            background: transparent;
+            border: 1px solid #6b4c3b;
+            color: #6b4c3b;
+            box-shadow: none;
+        }
+        .btn-back:hover {
+            background: #6b4c3b;
+            color: #fefae0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .row-hint {
+            font-family: 'Caveat', cursive;
+            font-size: 0.85rem;
+            color: #8b6a50;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 100%;
+            margin: 0 auto 10px;
+        }
+
+        .card {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            cursor: pointer;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            transition: transform 0.15s ease, box-shadow 0.3s;
+            overflow: visible;
+        }
+        .card.matched {
+            box-shadow: 0 0 0 4px #8bc48a, 0 6px 20px rgba(0,0,0,0.3);
+            cursor: default;
+        }
+        .card.selected {
+            box-shadow: 0 0 0 4px #d4a373, 0 8px 24px rgba(212, 163, 115, 0.5);
+            transform: scale(1.04);
+            z-index: 5;
+            transition: transform 0.2s ease, box-shadow 0.2s;
+        }
+
+        .card-inner {
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            font-family: 'Amiri', 'Reem Kufi', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2c1810;
+            background: linear-gradient(160deg, #fefcf7, #f5efe5);
+            border: 2px solid #d4c4a8;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+            gap: 4px;
+        }
+
+        .card-inner img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto;
+        }
+        .card-inner .card-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            color: #3e2a1e;
+            line-height: 1.3;
+            word-break: break-word;
+            max-width: 100%;
+        }
+
+        .card-ina .card-inner {
+            border-color: #b8c4a0;
+            background: linear-gradient(160deg, #f5faf0, #eef5e8);
+        }
+
+        .card-arab .card-inner {
+            border-color: #c4b49a;
+            background: linear-gradient(160deg, #fefcf7, #f5efe5);
+            font-size: 1.5rem;
+        }
+
+        .search-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(4px);
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 20;
+            transition: all 0.2s;
+            opacity: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            pointer-events: auto;
+        }
+        .card:hover .search-btn {
+            opacity: 1;
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .search-btn {
+                opacity: 0.7;
+                width: 26px;
+                height: 26px;
+                font-size: 0.85rem;
+            }
+        }
+        .search-btn:hover {
+            background: var(--gold);
+            color: white;
+            transform: scale(1.15);
+            border-color: #5c3d2e;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .search-btn:active {
+            transform: scale(0.95);
+            transition: 0.05s;
+        }
+
+        .confetti-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .confetti-piece {
+            position: absolute;
+            animation: confettiFall linear forwards;
+            font-size: 1.3rem;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-120px) rotate(0deg) scale(0.8); opacity: 1; }
+            80% { opacity: 0.9; }
+            100% { transform: translateY(105vh) rotate(480deg) scale(0.4); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+            h1 { font-size: 1.8rem; }
+            .game-container { padding: 18px 10px 14px; }
+            .card-inner img { max-width: 55%; max-height: 45%; }
+            .card-inner .card-text { font-size: 0.65rem; }
+            .card-arab .card-inner { font-size: 1.2rem; }
+            .info-panel { font-size: 0.8rem; padding: 8px 10px; }
+            .btn { font-size: 0.9rem; padding: 10px 20px; }
+            .decor-icons { font-size: 2rem; }
+            .search-btn { width: 24px; height: 24px; font-size: 0.8rem; top: 4px; right: 4px; }
+        }
+        @media (max-width: 380px) {
+            .grid { gap: 5px; }
+            h1 { font-size: 1.4rem; }
+            .card-inner img { max-width: 45%; max-height: 35%; }
+            .card-inner .card-text { font-size: 0.55rem; }
+            .card-arab .card-inner { font-size: 0.95rem; }
+            .search-btn { width: 20px; height: 20px; font-size: 0.7rem; top: 2px; right: 2px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="steamCanvas"></canvas>
+    <div class="lamp-spotlight" aria-hidden="true"></div>
+    <div class="decor-icons top-right" aria-hidden="true">🍽️</div>
+    <div class="decor-icons top-left" aria-hidden="true">🥤</div>
+    <div class="decor-icons bottom-right" aria-hidden="true">🍜</div>
+    <div class="decor-icons bottom-left" aria-hidden="true">🥄</div>
+
+    <div class="game-container">
+        <h1>مَطْعَمٌ</h1>
+        <div class="badge-mode">MODE BELAJAR</div>
+
+        <div class="info-panel">
+            <div class="info-item">✅ Pasangan: <span id="pairs-matched">0</span> / <span id="total-pairs">6</span></div>
+            <div class="info-item">🔄 Percobaan: <span id="attempts">0</span></div>
+        </div>
+        <div class="row-hint">ARABIC X INDONESIAN</div>
+        <div class="grid" id="game-grid"></div>
+        <div class="message" id="message">🔍 Klik dua kartu untuk mencocokkan</div>
+
+        <button class="btn" id="restart-btn">🔄 Mulai Ulang</button>
+        <button class="btn btn-back" id="back-btn">🏠 Kembali</button>
+    </div>
+
+    <div class="confetti-container" id="confetti-container" aria-hidden="true"></div>
+
+    <script>
+        (function() {
+            const canvas = document.getElementById('steamCanvas');
+            const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+            let W = 0, H = 0, DPR = 1;
+            let particles = [];
+            let lastTime = performance.now();
+            let emitAccumulator = 0;
+            let source1X, source1Y, source1Spread, source2X, source2Y, source2Spread;
+
+            const spriteCanvas = document.createElement('canvas');
+            const spriteCtx = spriteCanvas.getContext('2d');
+            const SPRITE_SIZE = 128;
+
+            function buildSprite() {
+                spriteCanvas.width = SPRITE_SIZE;
+                spriteCanvas.height = SPRITE_SIZE;
+                const g = spriteCtx.createRadialGradient(SPRITE_SIZE*0.5, SPRITE_SIZE*0.5, 0, SPRITE_SIZE*0.5, SPRITE_SIZE*0.5, SPRITE_SIZE*0.5);
+                g.addColorStop(0, 'rgba(255,255,255,0.68)');
+                g.addColorStop(0.18, 'rgba(255,255,255,0.35)');
+                g.addColorStop(0.45, 'rgba(255,255,255,0.12)');
+                g.addColorStop(1, 'rgba(255,255,255,0)');
+                spriteCtx.clearRect(0,0,SPRITE_SIZE,SPRITE_SIZE);
+                spriteCtx.fillStyle = g;
+                spriteCtx.beginPath();
+                spriteCtx.arc(SPRITE_SIZE*0.5, SPRITE_SIZE*0.5, SPRITE_SIZE*0.5, 0, Math.PI*2);
+                spriteCtx.fill();
+                const g2 = spriteCtx.createRadialGradient(SPRITE_SIZE*0.42, SPRITE_SIZE*0.52, 0, SPRITE_SIZE*0.42, SPRITE_SIZE*0.52, SPRITE_SIZE*0.42);
+                g2.addColorStop(0, 'rgba(255,255,255,0.26)');
+                g2.addColorStop(0.45, 'rgba(255,255,255,0.10)');
+                g2.addColorStop(1, 'rgba(255,255,255,0)');
+                spriteCtx.fillStyle = g2;
+                spriteCtx.beginPath();
+                spriteCtx.ellipse(SPRITE_SIZE*0.42, SPRITE_SIZE*0.52, SPRITE_SIZE*0.22, SPRITE_SIZE*0.16, -0.25, 0, Math.PI*2);
+                spriteCtx.fill();
+            }
+
+            function resize() {
+                DPR = Math.min(window.devicePixelRatio || 1, 2);
+                W = window.innerWidth;
+                H = window.innerHeight;
+                canvas.width = Math.floor(W * DPR);
+                canvas.height = Math.floor(H * DPR);
+                canvas.style.width = W + 'px';
+                canvas.style.height = H + 'px';
+                ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+                source1X = W * 0.18; source1Y = H * 0.92; source1Spread = W * 0.16;
+                source2X = W * 0.82; source2Y = H * 0.92; source2Spread = W * 0.16;
+            }
+
+            function rand(min, max) { return Math.random() * (max - min) + min; }
+            function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+            function createParticle(fromSource) {
+                const sx = fromSource === 1 ? source1X : source2X;
+                const sy = fromSource === 1 ? source1Y : source2Y;
+                const spread = fromSource === 1 ? source1Spread : source2Spread;
+                particles.push({
+                    x: sx + rand(-spread, spread), y: sy + rand(-6, 8),
+                    vx: rand(-10, 10), vy: rand(-72, -125),
+                    age: 0, life: rand(4.5, 7.0),
+                    size: rand(22, 58), alpha: rand(0.10, 0.22),
+                    wobble: rand(0.8, 1.6), phase: rand(0, Math.PI*2),
+                    drift: rand(14, 30), stretch: rand(0.9, 1.35)
+                });
+            }
+
+            function update(dt) {
+                emitAccumulator += dt;
+                while (emitAccumulator > 0.048) {
+                    emitAccumulator -= 0.048;
+                    if (particles.length < 90) createParticle(Math.random() < 0.5 ? 1 : 2);
+                    if (Math.random() < 0.18 && particles.length < 100) createParticle(Math.random() < 0.5 ? 1 : 2);
+                }
+                particles = particles.filter(p => {
+                    p.age += dt;
+                    const t = p.age / p.life;
+                    if (t >= 1) return false;
+                    const fadeIn = Math.min(t / 0.16, 1);
+                    const fadeOut = 1 - Math.max(0, (t - 0.55) / 0.45);
+                    p.displayAlpha = p.alpha * easeOutCubic(fadeIn) * easeOutCubic(fadeOut);
+                    p.currentSize = p.size * (1 + t * 1.15);
+                    const sway = Math.sin(p.phase + p.age * 2.2 * p.wobble) * p.drift;
+                    p.x += (p.vx + sway * 0.55) * dt;
+                    p.y += p.vy * dt;
+                    p.vx *= 0.998;
+                    p.vy *= 0.9993;
+                    return p.y > -120 && p.x > -160 && p.x < W + 160;
+                });
+            }
+
+            function render() {
+                ctx.clearRect(0, 0, W, H);
+                const drawHaze = (sx, sy) => {
+                    const haze = ctx.createRadialGradient(sx, sy, 0, sx, sy, Math.min(W, H) * 0.16);
+                    haze.addColorStop(0, 'rgba(255,255,255,0.06)');
+                    haze.addColorStop(0.25, 'rgba(255,255,255,0.02)');
+                    haze.addColorStop(1, 'rgba(255,255,255,0)');
+                    ctx.fillStyle = haze;
+                    ctx.fillRect(0, 0, W, H);
+                };
+                drawHaze(source1X, source1Y);
+                drawHaze(source2X, source2Y);
+                particles.forEach(p => {
+                    const s = p.currentSize || p.size;
+                    const a = Math.max(0, p.displayAlpha || 0);
+                    if (a <= 0.002) return;
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'screen';
+                    ctx.globalAlpha = a * 0.72;
+                    ctx.translate(p.x, p.y);
+                    ctx.scale(p.stretch, 1.02 + (1 - p.stretch) * 0.16);
+                    ctx.drawImage(spriteCanvas, -s, -s, s * 2, s * 2);
+                    ctx.restore();
+                });
+            }
+
+            function loop(now) {
+                const dt = Math.min((now - lastTime) / 1000, 0.033);
+                lastTime = now;
+                update(dt);
+                render();
+                requestAnimationFrame(loop);
+            }
+
+            buildSprite();
+            window.addEventListener('resize', resize, { passive: true });
+            resize();
+            requestAnimationFrame(loop);
+        })();
+
+        (function() {
+            const vocabulary = [
+                { arab: "مَاءٌ", arti: "Air", img: "../Gambar/Air.jpg" },
+                { arab: "عَصِيرٌ", arti: "Jus", img: "../Gambar/Jus.jpg" },
+                { arab: "خُبْزٌ", arti: "Roti", img: "../Gambar/Roti.jpg" },
+                { arab: "رُزٌّ", arti: "Nasi", img: "../Gambar/Nasi.jpg" },
+                { arab: "فَاكِهَةٌ", arti: "Buah", img: "../Gambar/Buah.jpg" },
+                { arab: "حَلِيبٌ", arti: "Susu", img: "../Gambar/Susu.jpg" },
+                { arab: "سَلَطَةٌ", arti: "Salad", img: "../Gambar/Salad.jpg" },
+                { arab: "شُورْبَةٌ", arti: "Sup", img: "../Gambar/Sup.jpg" },
+                { arab: "سَانْدْوِيتْشٌ", arti: "Sandwich", img: "../Gambar/Sandwich.jpg" },
+                { arab: "شَاوَرْمَا", arti: "Shawarma atau Kebab", img: "../Gambar/Shawarma atau Kebab.jpg" },
+                { arab: "بِرْغَرٌ", arti: "Burger", img: "../Gambar/Burger.jpg" },
+                { arab: "نُودْلَةٌ", arti: "Mie", img: "../Gambar/Mie.jpg" },
+                { arab: "مَعْكَرُونَةٌ", arti: "Makaroni", img: "../Gambar/Makaroni.jpg" },
+                { arab: "بِيتْزَا", arti: "Pizza", img: "../Gambar/Pizza.jpg" },
+                { arab: "كَعْكٌ", arti: "Kue", img: "../Gambar/Kue.jpg" },
+                { arab: "بِسْكُوِيتٌ", arti: "Biskuit", img: "../Gambar/Biskuit.jpg" },
+                { arab: "وَفِل", arti: "Wafel", img: "../Gambar/Wafel.jpg" },
+                { arab: "بُودِينْغٌ", arti: "Puding", img: "../Gambar/Puding.jpg" },
+                { arab: "مُرَبَّى", arti: "Selai", img: "../Gambar/Selai.jpg" },
+                { arab: "عَسَلٌ", arti: "Madu", img: "../Gambar/Madu.jpg" },
+                { arab: "شَوْكُولَاتَةٌ", arti: "Cokelat", img: "../Gambar/Cokelat.jpg" },
+                { arab: "حَلْوَى", arti: "Manisan / Permen", img: "../Gambar/Manisan atau permen.jpg" },
+                { arab: "زُبَادِيٌّ", arti: "Yoghurt", img: "../Gambar/Yoghurt.jpg" },
+                { arab: "جَبَنٌ", arti: "Keju", img: "../Gambar/Keju.jpg" },
+                { arab: "زُبْdَةٌ", arti: "Mentega", img: "../Gambar/Mentega.jpg" },
+                { arab: "بَيْضٌ", arti: "Telur", img: "../Gambar/Telur.jpg" },
+                { arab: "لَحْمٌ", arti: "Daging", img: "../Gambar/Daging.jpg" },
+                { arab: "دَجَاجٌ", arti: "Ayam", img: "../Gambar/Ayam.jpg" },
+                { arab: "سَمَكٌ", arti: "Ikan", img: "../Gambar/Ikan.jpg" },
+                { arab: "تُونَةٌ", arti: "Tuna", img: "../Gambar/Tuna.jpg" },
+                { arab: "خَضَارٌ", arti: "Sayuran", img: "../Gambar/Sayuran.jpg" },
+                { arab: "طَمَاطِمُ", arti: "Tomat", img: "../Gambar/Tomat.jpg" },
+                { arab: "خِيَارٌ", arti: "Timun", img: "../Gambar/Timun.jpg" },
+                { arab: "خَسٌّ", arti: "Selada", img: "../Gambar/Selada.jpg" },
+                { arab: "جَزَرٌ", arti: "Wortel", img: "../Gambar/Wortel.jpg" },
+                { arab: "بَطَاطِسٌ", arti: "Kentang", img: "../Gambar/Kentang.jpg" },
+                { arab: "بَصَلٌ", arti: "Bawang", img: "../Gambar/Bawang.jpg" },
+                { arab: "ثَوْمٌ", arti: "Bawang putih", img: "../Gambar/Bawang putih.jpg" },
+                { arab: "ذُرَةٌ", arti: "Jagung", img: "../Gambar/Jagung.jpg" },
+                { arab: "فَاصُولِيَا", arti: "Kacang-kacangan / Buncis", img: "../Gambar/Kacang-kacangan atau Buncis.jpg" },
+                { arab: "فُلْفُلٌ", arti: "Cabai", img: "../Gambar/Cabai.jpg" },
+                { arab: "مِلْحٌ", arti: "Garam", img: "../Gambar/Garam.jpg" },
+                { arab: "سُكَّرٌ", arti: "Gula", img: "../Gambar/Gula.jpg" },
+                { arab: "زَيْتٌ", arti: "Minyak", img: "../Gambar/Minyak.jpg" },
+                { arab: "خَلٌّ", arti: "Cuka", img: "../Gambar/Cuka.jpg" },
+                { arab: "بَهَارَاتٌ", arti: "Bumbu", img: "../Gambar/Bumbu.jpg" },
+                { arab: "مِلْعَقَةٌ", arti: "Sendok", img: "../Gambar/Sendok.jpg" },
+                { arab: "شَوْكَةٌ", arti: "Garpu", img: "../Gambar/Garpu.jpg" },
+                { arab: "سِكِّينٌ", arti: "Pisau", img: "../Gambar/Pisau.jpg" },
+                { arab: "صَحْنٌ", arti: "Piring", img: "../Gambar/Piring.jpg" },
+                { arab: "كُوبٌ", arti: "Gelas", img: "../Gambar/Gelas.jpg" },
+                { arab: "صَانِيَةٌ", arti: "Nampan", img: "../Gambar/Nampan.jpg" },
+                { arab: "قِدْرٌ", arti: "Panci", img: "../Gambar/Panci.jpg" },
+                { arab: "مَقْلَاةٌ", arti: "Wajan", img: "../Gambar/Wajan.jpg" },
+                { arab: "حَاوِيَةٌ", arti: "Kontainer", img: "../Gambar/Kontainer.jpg" },
+                { arab: "ثَلَّاجَةٌ", arti: "Kulkas", img: "../Gambar/Kulkas.jpg" },
+                { arab: "فُرْنٌ", arti: "Oven", img: "../Gambar/Oven.jpg" },
+                { arab: "مَوْقِدٌ", arti: "Kompor", img: "../Gambar/Kompor.jpg" },
+                { arab: "مِغْرَفَةٌ", arti: "Centong", img: "../Gambar/Centong.jpg" },
+                { arab: "مِئْزَرٌ", arti: "Celemek", img: "../Gambar/Celemek.jpg" },
+                { arab: "مُنْدِيلٌ", arti: "Serbet / Tisu", img: "../Gambar/Serbet atau Tisu.jpg" },
+                { arab: "حَنَفِيَّةٌ", arti: "Keran", img: "../Gambar/Keran.jpg" },
+                { arab: "بَائِعٌ", arti: "Penjual", img: "../Gambar/Penjual.jpg" },
+                { arab: "قَائِمَةُ الطَّعَامِ", arti: "Daftar menu", img: "../Gambar/Daftar menu.jpg" },
+                { arab: "مَغْسَلٌ", arti: "Tempat Cuci Tangan", img: "../Gambar/Tempat Cuci Tangan.jpg" },
+                { arab: "سَلَّةٌ", arti: "Keranjang", img: "../Gambar/Keranjang.jpg" }
+            ];
+
+            const TOTAL_PAIRS = vocabulary.length;
+            let cards = [];
+            let selectedCards = [];
+            let matchedPairs = 0;
+            let attempts = 0;
+            let lockBoard = false;
+
+            const gridEl = document.getElementById('game-grid');
+            const pairsMatchedEl = document.getElementById('pairs-matched');
+            const totalPairsEl = document.getElementById('total-pairs');
+            const attemptsEl = document.getElementById('attempts');
+            const messageEl = document.getElementById('message');
+            const restartBtn = document.getElementById('restart-btn');
+            const backBtn = document.getElementById('back-btn');
+            const confettiContainer = document.getElementById('confetti-container');
+
+            totalPairsEl.textContent = TOTAL_PAIRS;
+
+            function openImageSearch(arabText, indoText) {
+                const query = encodeURIComponent(`${arabText} ${indoText}`);
+                const url = `https://www.bing.com/images/search?q=${query}&form=HDRSC3&first=1`;
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }
+            function createCards() {
+                const cardList = [];
+                vocabulary.forEach((item, index) => {
+                    const inaCard = { 
+                        pairId: index, 
+                        type: 'ina', 
+                        content: item.arti, 
+                        arabPair: item.arab,
+                        img: item.img, 
+                        matched: false 
+                    };
+                    const arabCard = { 
+                        pairId: index, 
+                        type: 'arab', 
+                        content: item.arab, 
+                        indoPair: item.arti,
+                        img: null, 
+                        matched: false 
+                    };
+                    cardList.push(arabCard, inaCard);
+                });
+                return cardList;
+            }
+
+            function createSearchButton(arabText, indoText) {
+                const searchBtn = document.createElement('button');
+                searchBtn.className = 'search-btn';
+                searchBtn.innerHTML = '🔍';
+                searchBtn.title = `Cari gambar "${arabText} ${indoText}" di web`;
+                searchBtn.setAttribute('aria-label', `Cari gambar ${arabText} ${indoText}`);
+
+                searchBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    openImageSearch(arabText, indoText);
+                });
+                
+                searchBtn.addEventListener('pointerdown', (e) => {
+                    e.stopPropagation();
+                });
+                
+                return searchBtn;
+            }
+
+            function renderGrid() {
+                gridEl.innerHTML = '';
+                cards.forEach((card, index) => {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'card';
+                    if (card.type === 'ina') cardDiv.classList.add('card-ina');
+                    else cardDiv.classList.add('card-arab');
+                    if (card.matched) cardDiv.classList.add('matched');
+                    cardDiv.setAttribute('data-index', index);
+
+                    const inner = document.createElement('div');
+                    inner.className = 'card-inner';
+                    let arabText, indoText;
+                    if (card.type === 'arab') {
+                        arabText = card.content;
+                        indoText = card.indoPair;
+                    } else {
+                        arabText = card.arabPair;
+                        indoText = card.content;
+                    }
+
+                    if (card.img) {
+                        const imgEl = document.createElement('img');
+                        imgEl.src = card.img;
+                        imgEl.alt = card.content;
+                        imgEl.draggable = false;
+                        inner.appendChild(imgEl);
+                        
+                        const textEl = document.createElement('span');
+                        textEl.className = 'card-text';
+                        textEl.textContent = card.content;
+                        inner.appendChild(textEl);
+                    } else {
+                        inner.textContent = card.content;
+                    }
+                    const searchBtn = createSearchButton(arabText, indoText);
+                    inner.appendChild(searchBtn);
+
+                    cardDiv.appendChild(inner);
+                    cardDiv.addEventListener('click', () => {
+                        if (!card.matched) {
+                            selectCard(index, cardDiv);
+                        }
+                    });
+                    
+                    gridEl.appendChild(cardDiv);
+                });
+            }
+
+            function selectCard(index, cardElement) {
+                if (lockBoard) return;
+                if (cards[index].matched) return;
+                if (selectedCards.length === 1 && selectedCards[0].index === index) {
+                    deselectCard(selectedCards[0]);
+                    return;
+                }
+                if (selectedCards.length >= 2) return;
+
+                cardElement.classList.add('selected');
+                selectedCards.push({ index, element: cardElement });
+
+                if (selectedCards.length === 2) {
+                    attempts++;
+                    attemptsEl.textContent = attempts;
+                    checkMatch();
+                }
+            }
+
+            function deselectCard(selected) {
+                selected.element.classList.remove('selected');
+            }
+
+            function deselectAll() {
+                selectedCards.forEach(s => s.element.classList.remove('selected'));
+                selectedCards = [];
+            }
+
+            function checkMatch() {
+                const [first, second] = selectedCards;
+                const card1 = cards[first.index];
+                const card2 = cards[second.index];
+
+                if (card1.pairId === card2.pairId && card1.type !== card2.type) {
+                    lockBoard = true;
+                    card1.matched = true;
+                    card2.matched = true;
+                    first.element.classList.add('matched');
+                    first.element.classList.remove('selected');
+                    second.element.classList.add('matched');
+                    second.element.classList.remove('selected');
+                    matchedPairs++;
+                    pairsMatchedEl.textContent = matchedPairs;
+                    selectedCards = [];
+                    lockBoard = false;
+
+                    if (matchedPairs === TOTAL_PAIRS) {
+                        messageEl.innerHTML = '🎉 مُمْتَازٌ! Anda telah mencocokkan semua pasangan! 🎉';
+                        messageEl.className = 'message win';
+                        spawnConfetti();
+                    } else {
+                        messageEl.innerHTML = '✅ Bagus! Lanjutkan mencari pasangan berikutnya.';
+                        messageEl.className = 'message success';
+                    }
+                } else {
+                    lockBoard = true;
+                    messageEl.innerHTML = '🔁 Pasangan belum tepat. Coba lagi.';
+                    messageEl.className = 'message';
+                    setTimeout(() => {
+                        deselectAll();
+                        lockBoard = false;
+                        messageEl.innerHTML = matchedPairs === TOTAL_PAIRS
+                            ? '🎉 مُمْتَازٌ! Anda telah mencocokkan semua pasangan! 🎉'
+                            : '🔍 Klik dua kartu untuk mencocokkan';
+                        messageEl.className = matchedPairs === TOTAL_PAIRS ? 'message win' : 'message';
+                    }, 600);
+                }
+            }
+
+            function spawnConfetti() {
+                const emojis = ['📖','✨','🌟','🎉','🍎','📚','💡','✅'];
+                const frag = document.createDocumentFragment();
+                for (let i = 0; i < 50; i++) {
+                    const piece = document.createElement('div');
+                    piece.className = 'confetti-piece';
+                    piece.style.left = Math.random() * 100 + '%';
+                    piece.style.top = -(Math.random() * 60 + 20) + 'px';
+                    piece.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    piece.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
+                    piece.style.animationDelay = Math.random() * 1.5 + 's';
+                    frag.appendChild(piece);
+                }
+                confettiContainer.innerHTML = '';
+                confettiContainer.appendChild(frag);
+                setTimeout(() => { confettiContainer.innerHTML = ''; }, 5000);
+            }
+
+            function restartGame() {
+                cards = createCards();
+                matchedPairs = 0;
+                attempts = 0;
+                selectedCards = [];
+                lockBoard = false;
+                pairsMatchedEl.textContent = '0';
+                attemptsEl.textContent = '0';
+                messageEl.innerHTML = '🔍 Klik dua kartu untuk mencocokkan';
+                messageEl.className = 'message';
+                confettiContainer.innerHTML = '';
+                renderGrid();
+                document.querySelector('.game-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            function goBack() {
+                window.location.href = '../index.html';
+            }
+
+            restartGame();
+            restartBtn.addEventListener('click', restartGame);
+            backBtn.addEventListener('click', goBack);
+            document.addEventListener('keydown', (e) => {
+                if ((e.key === 'r' || e.key === 'R') && document.activeElement === document.body) {
+                    restartGame();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
