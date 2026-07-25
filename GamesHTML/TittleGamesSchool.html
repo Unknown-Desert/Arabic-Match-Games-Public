@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arabic Match Game - Dark Elegant Home</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Cormorant Garamond', 'Times New Roman', serif;
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+      color: #d4d4d4;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 40%, #1c1c1c 0%, #050505 90%);
+      z-index: -1;
+    }
+
+    .home-container {
+      max-width: 1000px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .main-title {
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #c9a95c;
+      margin-bottom: 8px;
+      text-shadow: 0 0 20px rgba(201, 169, 92, 0.3);
+      font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #8a8a8a;
+      margin-bottom: 45px;
+      letter-spacing: 2px;
+      font-weight: 300;
+      border-bottom: 1px solid #333;
+      display: inline-block;
+      padding-bottom: 12px;
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .theme-card {
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid #2a2a2a;
+      border-radius: 20px;
+      padding: 35px 20px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .theme-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      border: 1px solid transparent;
+      background: linear-gradient(135deg, #c9a95c20, #ffffff10) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      transition: opacity 0.4s;
+      opacity: 0;
+    }
+
+    .theme-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -75%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(201, 169, 92, 0.15) 40%,
+        rgba(255, 255, 255, 0.1) 60%,
+        transparent 100%
+      );
+      transform: skewX(-25deg);
+      pointer-events: none;
+      z-index: 1;
+      transition: none;
+    }
+
+    .theme-card:hover::before {
+      animation: cardShimmer 0.8s ease-out forwards;
+    }
+
+    @keyframes cardShimmer {
+      0%   { left: -75%; }
+      100% { left: 125%; }
+    }
+
+    .theme-card:hover {
+      transform: translateY(-8px);
+      background: rgba(30, 30, 30, 0.8);
+      border-color: #c9a95c;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.8), 0 0 25px rgba(201, 169, 92, 0.15);
+    }
+
+    .theme-card:hover::after {
+      opacity: 1;
+    }
+
+    .icon-placeholder {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
+      transition: transform 0.3s;
+    }
+
+    .theme-card:hover .icon-placeholder {
+      transform: scale(1.1) rotate(2deg);
+    }
+
+    .scene-icon {
+      width: 100%;
+      height: 100%;
+      stroke: #c9a95c;
+      fill: none;
+      stroke-width: 2;
+      transition: all 0.3s;
+    }
+
+    .theme-card:hover .scene-icon {
+      filter: drop-shadow(0 0 8px rgba(201, 169, 92, 0.5));
+    }
+    .anim-part {
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .theme-card:hover .anim-part {
+      opacity: 1;
+    }
+
+    .steam {
+      animation: steamFloat 2s ease-in-out infinite;
+    }
+    .steam.s2 { animation-delay: 0.6s; }
+    .steam.s3 { animation-delay: 1.2s; }
+
+    @keyframes steamFloat {
+      0% { transform: translateY(0); opacity: 0.8; }
+      100% { transform: translateY(-15px); opacity: 0; }
+    }
+
+    .droplet {
+      animation: dropletFall 2s ease-in infinite;
+    }
+    .droplet.d2 { animation-delay: 0.7s; }
+    .droplet.d3 { animation-delay: 1.4s; }
+
+    @keyframes dropletFall {
+      0% { transform: translateY(-10px); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(15px); opacity: 0; }
+    }
+
+    .chalk-dot {
+      animation: chalkBlink 1.5s ease-in-out infinite;
+    }
+    .chalk-dot.c2 { animation-delay: 0.5s; }
+    .chalk-dot.c3 { animation-delay: 1s; }
+
+    @keyframes chalkBlink {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .ball {
+      animation: bounce 0.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .page {
+      transform-origin: left;
+      animation: pageFlip 2s ease-in-out infinite;
+    }
+
+    @keyframes pageFlip {
+      0%, 100% { transform: perspective(100px) rotateY(0deg); }
+      50% { transform: perspective(100px) rotateY(-15deg); }
+    }
+
+    .heartbeat {
+      animation: beat 1s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.3); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.2); }
+      60% { transform: scale(1); }
+    }
+
+    .arab-name {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #c9a95c;
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      line-height: 1.2;
+      direction: rtl;
+    }
+
+    .indo-name {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #aaaaaa;
+      letter-spacing: 1px;
+    }
+
+    .play-hint {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #666;
+      transition: color 0.3s;
+    }
+
+    .theme-card:hover .play-hint {
+      color: #c9a95c;
+    }
+
+    .footer-note {
+      margin-top: 30px;
+      color: #555;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    .mode-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeInOverlay 0.3s ease-out;
+    }
+
+    .mode-modal {
+      background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+      border: 1px solid #c9a95c;
+      border-radius: 24px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px rgba(201,169,92,0.15);
+      animation: slideUpModal 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .mode-title {
+      font-size: 1.8rem;
+      color: #c9a95c;
+      margin-bottom: 10px;
+      font-family: 'Cormorant Garamond', serif;
+      letter-spacing: 2px;
+    }
+
+    .mode-subtitle {
+      color: #888;
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+    }
+
+    .mode-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: 1px solid #c9a95c;
+      color: #c9a95c;
+      padding: 14px 20px;
+      font-size: 1.1rem;
+      font-family: 'Segoe UI', sans-serif;
+      letter-spacing: 2px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+    }
+
+    .mode-btn:hover {
+      background: #c9a95c;
+      color: #0a0a0a;
+      box-shadow: 0 0 20px rgba(201,169,92,0.4);
+    }
+
+    .mode-btn.hard-btn {
+      border-color: #b8860b;
+      color: #b8860b;
+    }
+
+    .mode-btn.hard-btn:hover {
+      background: #b8860b;
+      color: #0a0a0a;
+    }
+
+    .mode-btn.learn-btn {
+      border-color: #5a9e6f;
+      color: #5a9e6f;
+    }
+
+    .mode-btn.learn-btn:hover {
+      background: #5a9e6f;
+      color: #0a0a0a;
+      box-shadow: 0 0 20px rgba(90,158,111,0.4);
+    }
+
+    .close-modal {
+      margin-top: 20px;
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    @keyframes fadeInOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUpModal {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .main-title {
+        font-size: 2.2rem;
+      }
+      .arab-name {
+        font-size: 1.7rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="home-container">
+    <h1 class="main-title">المدرسة</h1>
+    <p class="subtitle">PILIH LOKASI</p>
+
+    <div class="theme-grid">
+      <a href="#" class="theme-card" data-game="kantin" data-normal="Games/GameKantin.html" data-hard="Games/GameKantinHard.html" data-belajar="Games/GameKantinBelajar.html">
+        <div class="icon-placeholder">
+          <svg class="scene-icon" viewBox="0 0 100 100">
+            <path d="M20 70 Q20 90 50 90 Q80 90 80 70 Z" fill="#c9a95c" fill-opacity="0.3" stroke="#c9a95c" stroke-width="2"/>
+            <ellipse cx="50" cy="65" rx="25" ry="15" fill="#c9a95c" fill-opacity="0.4" stroke="#c9a95c" stroke-width="1.5"/>
+            <path class="anim-part steam s1" d="M40 55 Q45 45 40 35" fill="none" stroke="#c9a95c" stroke-width="1.5" opacity="0"/>
+            <path class="anim-part steam s2" d="M50 50 Q55 40 50 30" fill="none" stroke="#c9a95c" stroke-width="1.5" opacity="0"/>
+            <path class="anim-part steam s3" d="M60 55 Q65 45 60 35" fill="none" stroke="#c9a95c" stroke-width="1.5" opacity="0"/>
+          </svg>
+        </div>
+        <div class="arab-name">مَقْصَف</div>
+        <div class="indo-name">Kantin</div>
+        <span class="play-hint">✦ Mulai ✦</span>
+      </a>
+
+      <a href="#" class="theme-card" data-game="toilet" data-normal="Games/GameToilet.html" data-hard="Games/GameToiletHard.html" data-belajar="Games/GameToiletBelajar.html">
+        <div class="icon-placeholder">
+          <svg class="scene-icon" viewBox="0 0 100 100">
+            <rect x="35" y="20" width="30" height="10" rx="3" fill="#c9a95c" fill-opacity="0.4" stroke="#c9a95c" stroke-width="1.5"/>
+            <line x1="50" y1="30" x2="50" y2="45" stroke="#c9a95c" stroke-width="2"/>
+            <circle class="anim-part droplet d1" cx="50" cy="60" r="3" fill="#c9a95c" fill-opacity="0.8"/>
+            <circle class="anim-part droplet d2" cx="43" cy="55" r="2.5" fill="#c9a95c" fill-opacity="0.8"/>
+            <circle class="anim-part droplet d3" cx="57" cy="55" r="2.5" fill="#c9a95c" fill-opacity="0.8"/>
+            <ellipse cx="50" cy="80" rx="20" ry="5" fill="#c9a95c" fill-opacity="0.2" stroke="#c9a95c" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="arab-name">حَمَّام</div>
+        <div class="indo-name">Toilet</div>
+        <span class="play-hint">✦ Mulai ✦</span>
+      </a>
+
+      <a href="#" class="theme-card" data-game="kelas" data-normal="Games/GameKelas.html" data-hard="Games/GameKelasHard.html" data-belajar="Games/GameKelasBelajar.html">
+        <div class="icon-placeholder">
+          <svg class="scene-icon" viewBox="0 0 100 100">
+            <rect x="25" y="60" width="50" height="5" rx="2" fill="#c9a95c" fill-opacity="0.4" stroke="#c9a95c" stroke-width="1.5"/>
+            <line x1="35" y1="65" x2="35" y2="80" stroke="#c9a95c" stroke-width="1.5"/>
+            <line x1="65" y1="65" x2="65" y2="80" stroke="#c9a95c" stroke-width="1.5"/>
+            <rect x="30" y="70" width="40" height="15" rx="2" fill="none" stroke="#c9a95c" stroke-width="1.5"/>
+            <line x1="30" y1="85" x2="30" y2="90" stroke="#c9a95c" stroke-width="1.5"/>
+            <line x1="70" y1="85" x2="70" y2="90" stroke="#c9a95c" stroke-width="1.5"/>
+            <rect x="20" y="20" width="60" height="30" fill="none" stroke="#c9a95c" stroke-width="1.5"/>
+            <circle class="anim-part chalk-dot c1" cx="40" cy="35" r="1.5" fill="#c9a95c"/>
+            <circle class="anim-part chalk-dot c2" cx="50" cy="30" r="1.5" fill="#c9a95c"/>
+            <circle class="anim-part chalk-dot c3" cx="45" cy="40" r="1.5" fill="#c9a95c"/>
+          </svg>
+        </div>
+        <div class="arab-name">فَصْل</div>
+        <div class="indo-name">Kelas</div>
+        <span class="play-hint">✦ Mulai ✦</span>
+      </a>
+
+      <a href="#" class="theme-card" data-game="lapanganolahraga" data-normal="Games/GameLapanganOlahraga.html" data-hard="Games/GameLapanganOlahragaHard.html" data-belajar="Games/GameLapanganOlahragaBelajar.html">
+        <div class="icon-placeholder">
+          <svg class="scene-icon" viewBox="0 0 100 100">
+            <rect x="15" y="30" width="70" height="45" fill="none" stroke="#c9a95c" stroke-width="1.5"/>
+            <line x1="50" y1="30" x2="50" y2="75" stroke="#c9a95c" stroke-width="1"/>
+            <circle cx="50" cy="52" r="10" fill="none" stroke="#c9a95c" stroke-width="1"/>
+            <circle class="anim-part ball" cx="50" cy="40" r="8" fill="#c9a95c" fill-opacity="0.5" stroke="#c9a95c" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="arab-name">الْمَلْعَبُ</div>
+        <div class="indo-name">Lapangan Olahraga</div>
+        <span class="play-hint">✦ Mulai ✦</span>
+      </a>
+
+      <a href="#" class="theme-card" data-game="perpustakaan" data-normal="Games/GamePerpustakaan.html" data-hard="Games/GamePerpustakaanHard.html" data-belajar="Games/GamePerpustakaanBelajar.html">
+        <div class="icon-placeholder">
+          <svg class="scene-icon" viewBox="0 0 100 100">
+            <g class="book-group">
+              <rect x="20" y="40" width="20" height="35" fill="none" stroke="#c9a95c" stroke-width="1.5"/>
+              <path class="anim-part page" d="M40 45 L55 42 L55 73 L40 76 Z" fill="#c9a95c" fill-opacity="0.2" stroke="#c9a95c" stroke-width="1"/>
+              <rect x="60" y="35" width="20" height="40" fill="none" stroke="#c9a95c" stroke-width="1.5"/>
+              <line x1="70" y1="35" x2="70" y2="75" stroke="#c9a95c" stroke-width="1"/>
+            </g>
+            <line x1="15" y1="80" x2="85" y2="80" stroke="#c9a95c" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="arab-name">مَكْتَبَة</div>
+        <div class="indo-name">Perpustakaan</div>
+        <span class="play-hint">✦ Mulai ✦</span>
+      </a>
+
+      <a href="#" class="theme-card" data-game="uks" data-normal="Games/GameUKS.html" data-hard="Games/GameUKSHard.html" data-belajar="Games/GameUKSBelajar.html">
+        <div class="icon-placeholder">
+          <svg class="scene-icon" viewBox="0 0 100 100">
+            <rect x="40" y="25" width="20" height="50" fill="#c9a95c" fill-opacity="0.3" stroke="#c9a95c" stroke-width="2"/>
+            <rect x="25" y="40" width="50" height="20" fill="#c9a95c" fill-opacity="0.3" stroke="#c9a95c" stroke-width="2"/>
+            <polyline class="anim-part heartbeat" points="20,70 30,70 35,55 40,80 45,65 50,70 60,70" fill="none" stroke="#c9a95c" stroke-width="1.5" opacity="0.6"/>
+          </svg>
+        </div>
+        <div class="arab-name">عِيَادَة</div>
+        <div class="indo-name">UKS</div>
+        <span class="play-hint">✦ Mulai ✦</span>
+      </a>
+    </div>
+
+    <div class="footer-note">
+      ⬩ Klik judul kartu untuk bermain ⬩
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      function showModeModal(normalUrl, hardUrl, belajarUrl) {
+        const oldOverlay = document.querySelector('.mode-modal-overlay');
+        if (oldOverlay) oldOverlay.remove();
+
+        const overlay = document.createElement('div');
+        overlay.className = 'mode-modal-overlay';
+
+        const modal = document.createElement('div');
+        modal.className = 'mode-modal';
+        modal.innerHTML = `
+          <div class="mode-title">PILIH MODE</div>
+          <div class="mode-subtitle">Tentukan tingkat kesulitan</div>
+          <div class="mode-buttons">
+            <button class="mode-btn" id="mode-normal">📚 Normal</button>
+            <button class="mode-btn hard-btn" id="mode-hard">🔥 Hard</button>
+            <button class="mode-btn learn-btn" id="mode-belajar">📖 Belajar</button>
+          </div>
+          <button class="close-modal">Batal</button>`;
+
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        document.getElementById('mode-normal').addEventListener('click', () => {
+          window.location.href = normalUrl;
+        });
+
+        document.getElementById('mode-hard').addEventListener('click', () => {
+          if (hardUrl) {
+            window.location.href = hardUrl;
+          } else {
+            alert('Mode Hard belum tersedia untuk lokasi ini.');
+          }
+        });
+
+        document.getElementById('mode-belajar').addEventListener('click', () => {
+          if (belajarUrl) {
+            window.location.href = belajarUrl;
+          } else {
+            alert('Mode Belajar belum tersedia untuk lokasi ini.');
+          }
+        });
+
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) overlay.remove();
+        });
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+          overlay.remove();
+        });
+      }
+      document.querySelectorAll('.theme-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+          e.preventDefault();
+          const normal = this.getAttribute('data-normal');
+          const hard = this.getAttribute('data-hard');
+          const belajar = this.getAttribute('data-belajar');
+          if (normal) {
+            showModeModal(normal, hard, belajar);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
