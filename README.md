@@ -6,7 +6,7 @@ This Game is Based on Mathing Pair (Card) with Web Development
 How to use:
 1. Open With Live Server -> Home.html
 2. Chose -> المدرسة = School = Sekolah
-3. Choise -> مَقْصَف = Canteen = Kantin
+3. Chose -> مَقْصَف = Canteen = Kantin
 4. Then Chose :
    
 - EASY MODE (GAME)
