@@ -3,6 +3,8 @@ Here Just Some Examples
 
 This Game is Based on Mathing Pair (Card) with Web Development
 
+[![Vercel](https://img.shields.io/badge/Vercel-Live-black?logo=vercel)](https://skripsi-lr-arabic-match-games.vercel.app/)
+
 How to use:
 1. Open With Live Server -> Home.html
 2. Chose -> المدرسة = School = Sekolah
