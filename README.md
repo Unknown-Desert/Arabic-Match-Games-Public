@@ -5,7 +5,7 @@ This Game is Based on Mathing Pair (Card) with Web Development
 
 TRY Games Here:
 
-[![Live](https://img.shields.io/badge/Vercel-Live-black?logo=vercel)](https://skripsi-lr-arabic-match-games.vercel.app/)
+[![Live](https://img.shields.io/badge/Live-Play%20Now-black?logo=gamepad&logoColor=white)](https://arabic-match-games.vercel.app/)
 
 How to use:
 1. Open With Live Server -> Home.html
