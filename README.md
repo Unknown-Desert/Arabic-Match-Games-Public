@@ -3,7 +3,7 @@ Here Just Some Examples
 
 This Game is Based on Mathing Pair (Card) with Web Development
 
-TRY Games Here:
+TRY FULL Games Here:
 
 [![Live](https://img.shields.io/badge/Live-Play%20Now-black?logo=gamepad&logoColor=white)](https://arabic-match-games.vercel.app/)
 
